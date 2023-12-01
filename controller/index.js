@@ -1,21 +1,21 @@
 const formidable = require('formidable');
-const {create, get, remove} = require('../model/todo');
-    
+const { create, get, remove } = require('../model/todo');
+
 exports.create = (req, res) => {
     const form = new formidable.IncomingForm();
     form.keepExtensions = true;
-    form.parse(req, async(err, fields) => {
+    form.parse(req, async (err, fields) => {
         const { description } = fields;
         // if there is no description in field, send error
-        if(!fields.description) {
-            return res.status(400).json({error: 'Description requires.'});
+        if (!fields.description) {
+            return res.status(400).json({ error: 'Description requires.' });
         }
         // if description exist, add to database useing create() from model
         try {
             const newTask = await create(description);
-            return res.status(201).send({data: newTask.rows[0]});
-        } catch(error) {
-            return res.status(400).json({error});
+            return res.status(201).send({ data: newTask.rows[0] });
+        } catch (error) {
+            return res.status(400).json({ error });
         }
     });
 };
@@ -23,9 +23,9 @@ exports.create = (req, res) => {
 exports.read = async (req, res) => {
     try {
         const task = await get();
-        return res.json({data: task.rows});
+        return res.json({ data: task.rows });
     } catch (error) {
-        return res.status(400).json({error});
+        return res.status(400).json({ error });
     };
 };
 
@@ -33,9 +33,9 @@ exports.removeTodo = async (req, res) => {
     const id = Number(req.params.id);
     try {
         await remove(id);
-        return res.status(200).send({data: id});
-    } catch(error) {
-        return res.status(400).json({error});
+        return res.status(200).send({ data: id });
+    } catch (error) {
+        return res.status(400).json({ error });
     };
 };
 
